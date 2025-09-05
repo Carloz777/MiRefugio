@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snacks & Bebidas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* Estilos generales */
+    body { font-family: 'Montserrat', sans-serif; background-color: #fafafa; margin: 0; padding: 0; color: #333; }
+    header { background: linear-gradient(90deg, #f9d29d, #f2a65a); padding: 1.5rem; text-align: center; }
+    header h1 { margin: 0; font-weight: 600; color: #fff; }
+
+    /* Sección menú */
+    .menu { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; padding: 2rem; }
+    .card { 
+      background: #fff; 
+      border-radius: 12px; 
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05); 
+      padding: 1rem; /* Reducido de 1.2rem a 1rem */
+      text-align: center; 
+      transition: transform 0.2s ease; 
+    }
+    .card:hover { transform: scale(1.02); }
+    .card img { 
+      width: 150px; /* ¡Imagenes achicadas! */
+      height: auto;
+      border-radius: 8px; 
+      margin-bottom: 0.5rem; 
+    }
+    .card h3 { margin: 0.5rem 0; font-weight: 600; }
+    .price { font-size: 1.2rem; font-weight: bold; color: #d35400; }
+
+    /* FAQ */
+    .faq { padding: 2rem; background: #fff; margin: 1rem; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+    .faq h2 { text-align: center; margin-bottom: 1rem; color: #444; }
+    details { margin: 0.5rem 0; padding: 0.8rem; border: 1px solid #eee; border-radius: 8px; background: #fafafa; cursor: pointer; }
+
+    /* Tips (consejos) */
+    .tips { padding: 2rem; text-align: center; }
+    .tips h2 { margin-bottom: 1rem; color: #444; }
+    .btn { background: #e67e22; color: #fff; border: none; padding: 0.8rem 1.5rem; margin: 0.5rem; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: background 0.3s; }
+    .btn:hover { background: #d35400; }
+    #consejo { margin-top: 1rem; font-size: 1.1rem; color: #333; font-style: italic; }
+
+    /* Galería Córdoba */
+    .gallery { padding: 2rem; text-align: center; }
+    .gallery h2 { margin-bottom: 1rem; }
+    .gallery img { width: 90%; max-width: 600px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: none; }
+    .gallery img.active { display: block; }
+    .controls { margin-top: 1rem; }
+    .controls button { background: #e67e22; color: #fff; border: none; padding: 0.5rem 1rem; margin: 0 0.5rem; border-radius: 6px; cursor: pointer; }
+    .controls button:hover { background: #d35400; }
+
+    footer { text-align: center; padding: 1rem; font-size: 0.9rem; color: #fff; background: linear-gradient(90deg, #f9d29d, #f2a65a); }
+  </style>
+</head>
+<body>
+  <header><h1>Snacks & Bebidas</h1></header>
+
+  <!-- Menú con Imágenes desde Imgur -->
+  <section class="menu">
+    <div class="card">
+      <img src="https://i.imgur.com/Fs0pPpA.png" alt="Coca Cola">
+      <h3>Coca Cola lata 354ml</h3>
+      <p class="price">$1700</p>
+    </div>
+    <div class="card">
+      <img src="https://i.imgur.com/ceNElj6.png" alt="Cerveza Stella">
+      <h3>Cerveza Stella 330ml</h3>
+      <p class="price">$2700</p>
+    </div>
+    <div class="card">
+      <img src="https://i.imgur.com/FyRmO4u.png" alt="Papas fritas Check">
+      <h3>Papas fritas Check 180g</h3>
+      <p class="price">$4800</p>
+    </div>
+  </section>
+
+  <!-- Preguntas frecuentes -->
+  <section class="faq">
+    <h2>Preguntas frecuentes</h2>
+    <details><summary>¿Hay WiFi en el departamento?</summary><p>Sí, el alojamiento cuenta con WiFi gratuito de alta velocidad.</p></details>
+    <details><summary>¿Cómo llego desde la terminal?</summary><p>A 10 minutos en taxi o 20 caminando.</p></details>
+    <details><summary>¿El patio es privado?</summary><p>Sí, es exclusivamente para vos.</p></details>
+    <details><summary>Horario de check-in / check-out</summary><p>Check-in desde 14:00 / check-out hasta 11:00.</p></details>
+  </section>
+
+  <!-- Consejos Córdoba -->
+  <section class="tips">
+    <h2>Lugares para conocer</h2>
+    <button class="btn" onclick="mostrarConsejo('centro')">🏛 Centro Histórico</button>
+    <button class="btn" onclick="mostrarConsejo('parques')">🌳 Parques</button>
+    <button class="btn" onclick="mostrarConsejo('gastronomia')">🍴 Gastronomía</button>
+    <p id="consejo"></p>
+  </section>
+
+  <!-- Galería de Córdoba -->
+  <section class="gallery">
+    <h2>Fotos de Córdoba</h2>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/47/Catedral_de_C%C3%B3rdoba.jpg" alt="Catedral de Córdoba" class="active">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1d/Paseo_del_Buen_Pastor_C%C3%B3rdoba.jpg" alt="Paseo del Buen Pastor">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/01/Parque_Sarmiento_C%C3%B3rdoba.jpg" alt="Parque Sarmiento">
+    <div class="controls">
+      <button onclick="cambiarFoto(-1)">⬅    Anterior</button>
+      <button onclick="cambiarFoto(1)">Siguiente    ➡</button>
+    </div>
+  </section>
+
+  <footer>Gracias por elegir nuestro refugio en el centro 💛</footer>
+
+  <script>
+    function mostrarConsejo(tipo) {
+      const mensajes = {
+        centro: "Visitá la Catedral, la Plaza San Martín y la Manzana Jesuítica.",
+        parques: "Disfrutá del Parque Sarmiento o caminá por la Costanera.",
+        gastronomia: "No te pierdas las empanadas cordobesas y un buen fernet con coca 😉."
+      };
+      document.getElementById("consejo").innerText = mensajes[tipo] || "";
+    }
+
+    let index = 0;
+    const fotos = document.querySelectorAll(".gallery img");
+    function cambiarFoto(direccion) {
+      fotos[index].classList.remove("active");
+      index = (index + direccion + fotos.length) % fotos.length;
+      fotos[index].classList.add("active");
+    }
+  </script>
+</body>
+</html>
