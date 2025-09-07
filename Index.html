@@ -58,8 +58,8 @@
   <section class="menu">
     <div class="card">
       <img src="https://i.imgur.com/Fs0pPpA.png" alt="Coca Cola">
-      <h3>Coca Cola lata 220ml</h3>
-      <p class="price">$1500</p>
+      <h3>Coca Cola lata 354ml</h3>
+      <p class="price">$1700</p>
     </div>
     <div class="card">
       <img src="https://i.imgur.com/ceNElj6.png" alt="Cerveza Stella">
@@ -136,24 +136,24 @@
     ];
 
     function actualizarTitulo() {
-      const lugar = imagenes[currentIndex].alt;
-      titulo.textContent = lugar;
+  const lugar = imagenes[currentIndex].alt;
+  titulo.textContent = lugar;
 
-      document.getElementById('btn-instagram').href = enlacesInfo[currentIndex];
+  document.getElementById('btn-instagram').href = enlacesInfo[currentIndex];
 
-      let linkMaps = "https://www.google.com/maps/search/" + encodeURIComponent(lugar + " Córdoba");
+  let linkMaps = "https://www.google.com/maps/search/" + encodeURIComponent(lugar + " Córdoba");
 
-      const lugarLower = lugar.toLowerCase();
-      if(lugarLower.includes("puente 450")) {
-        linkMaps = "https://www.google.com.ar/maps/place/Puente+450%C2%BA+Aniversario+(Puente+Peatonal+Parque+Las+Heras+-+Elisa)/@-31.4065471,-64.1869528,17z/data=!3m1!4b1!4m6!3m5!1s0x9432992488c8806b:0xd716e7f4617a15b3!8m2!3d-31.4065471!4d-64.1843779!16s%2Fg%2F11vc3952gq?entry=ttu";
-      } else if(lugarLower.includes("mirador")) {
-        linkMaps = "https://www.google.com.ar/maps/place/Mirador+del+Coniferal/@-31.4259395,-64.1804441,17z/data=!4m15!1m8!3m7!1s0x9432a2915aad2ca5:0x2609e2343fc6d9a0!2sMirador+del+Coniferal!8m2!3d-31.4259395!4d-64.1778692!10e5!16s%2Fg%2F11c3wv560j?entry=ttu";
-      } else if(lugarLower.includes("guemes")) {
-        linkMaps = "https://www.google.com/maps/place/Belgrano+900,+X5000JQR+C%C3%B3rdoba/@-31.425248,-64.1953664,17z";
-      }
+  const lugarLower = lugar.toLowerCase();
+  if(lugarLower.includes("puente 450")) {
+    linkMaps = "https://www.google.com.ar/maps/place/Puente+450%C2%BA+Aniversario+(Puente+Peatonal+Parque+Las+Heras+-+Elisa)/@-31.4065471,-64.1869528,17z/data=!3m1!4b1!4m6!3m5!1s0x9432992488c8806b:0xd716e7f4617a15b3!8m2!3d-31.4065471!4d-64.1843779!16s%2Fg%2F11vc3952gq?entry=ttu";
+  } else if(lugarLower.includes("mirador") && lugarLower.includes("sarmiento")) {
+    linkMaps = "https://www.google.com/maps/place/Mirador+del+Parque+Sarmiento/@-31.4259395,-64.1778692,17z/data=!3m1!4b1!4m6!3m5!1s0x9432a2915aad2ca5:0x2609e2343fc6d9a0!8m2!3d-31.4259395!4d-64.1778692!16s%2Fg%2F11c3wv560j?entry=ttu&g_ep=EgoyMDI1MDkwMy4wIKXMDSoASAFQAw%3D%3D";
+  } else if(lugarLower.includes("guemes")) {
+    linkMaps = "https://www.google.com/maps/place/Belgrano+900,+X5000JQR+C%C3%B3rdoba/@-31.425248,-64.1953664,17z";
+  }
 
-      document.getElementById('btn-google-maps').href = linkMaps;
-    }
+  document.getElementById('btn-google-maps').href = linkMaps;
+}
 
     function cambiarFoto(direccion) {
       imagenes[currentIndex].classList.remove('active');
@@ -179,16 +179,14 @@
     }
   </script>
 
-  <footer>
-    <p>Dirección: Humberto Primo 118, Barrio Centro, Córdoba</p>
-    <div class="social-icons">
-      <a href="https://wa.me/5493513814202?text=%F0%9F%91%8B%20Hola%20😊%20Quer%C3%ADa%20hacerte%20una%20consulta%20sobre%20tus%20productos%20%F0%9F%92%A1" target="_blank">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-      </a>
-      <a href="https://www.google.com/maps" target="_blank">
-        <img src="https://img.icons8.com/color/48/000000/google-maps.png" alt="Google Maps" style="width: 35px;">
-      </a>
-    </div>
-  </footer>
-</body>
-</html>
+<footer>
+  <p>Dirección: Humberto Primo 118, Barrio Centro, Córdoba</p>
+  <div class="social-icons">
+    <a href="https://wa.me/5493513814202?text=%F0%9F%91%8B%20Hola%20😊%20Quer%C3%ADa%20hacerte%20una%20consulta%20sobre%20tus%20productos%20%F0%9F%92%A1" target="_blank">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+    </a>
+    <a href="https://www.google.com/maps/place/Humberto+1%C2%BA+118,+X5000FAD+C%C3%B3rdoba/@-31.4096239,-64.1879432,17z/data=!3m1!4b1!4m6!3m5!1s0x9432987781bb1cf3:0xb5f0023ae1601f0!8m2!3d-31.409624!4d-64.1830723!16s%2Fg%2F11rhs52bkc?entry=ttu&g_ep=EgoyMDI1MDkwMy4wIKXMDSoASAFQAw%3D%3D" target="_blank">
+      <img src="https://img.icons8.com/color/48/000000/google-maps.png" alt="Google Maps" style="width: 35px;">
+    </a>
+  </div>
+</footer>
