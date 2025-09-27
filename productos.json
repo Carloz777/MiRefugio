@@ -3,7 +3,7 @@
     "id": 1,
     "nombre": "Coca Cola lata 354ml",
     "precio": 2000,
-    "visible": false,
+    "visible": true,
     "img": "https://i.imgur.com/Fs0pPpA.png"
   },
   {
@@ -17,7 +17,7 @@
     "id": 3,
     "nombre": "Papas fritas Check 150g",
     "precio": 4800,
-    "visible": true,
+    "visible": false,
     "img": "https://i.imgur.com/FyRmO4u.png"
   },
   {
