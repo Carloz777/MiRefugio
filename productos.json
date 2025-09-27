@@ -1,0 +1,9 @@
+[
+  { "id": 1, "nombre": "Coca Cola lata 354ml", "precio": 2000, "visible": true, "img": "https://i.imgur.com/Fs0pPpA.png" },
+  { "id": 2, "nombre": "Cerveza Stella 330ml", "precio": 3000, "visible": true, "img": "https://i.imgur.com/ceNElj6.png" },
+  { "id": 3, "nombre": "Papas fritas Check 150g", "precio": 4800, "visible": true, "img": "https://i.imgur.com/FyRmO4u.png" },
+  { "id": 4, "nombre": "Agua Mineral Natural 500 ml", "precio": 1800, "visible": true, "img": "https://i.imgur.com/beZNyBO.png" },
+  { "id": 5, "nombre": "Pepsi Black 354ml", "precio": 1800, "visible": true, "img": "https://i.imgur.com/6kr0Lwl.png" },
+  { "id": 6, "nombre": "Club Social 144g", "precio": 900, "visible": true, "img": "https://i.imgur.com/XciApPU.png" },
+  { "id": 7, "nombre": "Agua Tónica 269ml", "precio": 1400, "visible": true, "img": "https://i.imgur.com/u5d5Fq6.png" }
+]
