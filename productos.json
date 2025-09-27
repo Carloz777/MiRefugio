@@ -17,14 +17,14 @@
     "id": 3,
     "nombre": "Papas fritas Check 150g",
     "precio": 4800,
-    "visible": false,
+    "visible": true,
     "img": "https://i.imgur.com/FyRmO4u.png"
   },
   {
     "id": 4,
     "nombre": "Agua Mineral Natural 500 ml",
     "precio": 1800,
-    "visible": true,
+    "visible": false,
     "img": "https://i.imgur.com/beZNyBO.png"
   },
   {
