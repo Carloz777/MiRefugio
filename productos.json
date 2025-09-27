@@ -3,14 +3,14 @@
     "id": 1,
     "nombre": "Coca Cola lata 354ml",
     "precio": 2000,
-    "visible": true,
+    "visible": false,
     "img": "https://i.imgur.com/Fs0pPpA.png"
   },
   {
     "id": 2,
     "nombre": "Cerveza Stella 330ml",
     "precio": 3000,
-    "visible": false,
+    "visible": true,
     "img": "https://i.imgur.com/ceNElj6.png"
   },
   {
