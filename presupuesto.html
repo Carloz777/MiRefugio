@@ -167,12 +167,12 @@
   <script>
     const productos = [
       { nombre: "Coca Cola lata 354ml", precio: 2000, img: "https://i.imgur.com/Fs0pPpA.png" },
-      { nombre: "Cerveza Stella 330ml", precio: 3000, img: "https://i.imgur.com/ceNElj6.png" },
-      { nombre: "Papas fritas Check 150g", precio: 4800, img: "https://i.imgur.com/FyRmO4u.png" },
       { nombre: "Agua Mineral Natural 500 ml", precio: 1800, img: "https://i.imgur.com/beZNyBO.png" },
       { nombre: "Pepsi Black 354ml", precio: 1800, img: "https://i.imgur.com/6kr0Lwl.png" },
       { nombre: "Galletas Club Social 144g", precio: 900, img: "https://i.imgur.com/XciApPU.png" },
-      { nombre: "Agua Tónica 269ml", precio: 1400, img: "https://i.imgur.com/u5d5Fq6.png" }
+      { nombre: "Guarraziani de 2 litros", precio: 3000, img: "https://i.imgur.com/ioiVM8Z.png" },
+      { nombre: "Bebida importada coreana", precio: 4000, img: "https://i.imgur.com/bbHdPyv.png" },
+      { nombre: "Papas fritas", precio: 2500, img: "https://i.imgur.com/u1WA8mp.png" }
     ];
 
     let carrito = {};
@@ -236,16 +236,15 @@
       let mensaje = "Hola! Este es el detalle de tu consumo del frigobar ☺️:\n\n";
       let total = 0;
 
-      // Diccionario de emojis por producto - CORREGIDO Y MEJORADO
       const emojis = {
         "Coca Cola": "🥤",
-        "Cerveza Stella": "🍺",
-        "Pepsi Black": "🥤",
+        "Pepsi": "🥤",
+        "Guarraziani": "🧃",
+        "Bebida coreana": "🇰🇷",
         "Papas fritas": "🍟",
         "Agua Mineral": "💧",
-        "Galletas": "🍪",           // NUEVO EMOJI PARA GALLETAS
-        "Agua Tónica": "🥤",        // NUEVO EMOJI PARA AGUA TÓNICA
-        "Club Social": "🍪"         // ALTERNATIVA PARA GALLETAS
+        "Galletas": "🍪",
+        "Club Social": "🍪"
       };
 
       let hayProductos = false;
@@ -258,7 +257,6 @@
           const prod = productos[index];
           const subtotal = cantidad * prod.precio;
 
-          // Buscar emoji según el nombre - LÓGICA MEJORADA
           let emoji = "✨";
           for (let clave in emojis) {
             if (prod.nombre.toLowerCase().includes(clave.toLowerCase())) {
@@ -281,16 +279,12 @@
       mensaje += "💙 Gracias por disfrutar de tu estadía con nosotros.\n";
       mensaje += "¡Esperamos que hayas disfrutado cada momento! 🌿✨";
 
-      const telefono = "5493513814202"; // tu número de WhatsApp
-      
-      // FORMATO CORRECTO PARA WHATSAPP
+      const telefono = "5493513814202";
       const url = `https://api.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
       
-      // Abrir en nueva ventana
       window.open(url, '_blank', 'width=600,height=600');
     }
 
-    // Iniciar
     document.addEventListener('DOMContentLoaded', () => {
       cargarProductos();
       actualizarTotal();
