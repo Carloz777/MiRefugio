@@ -54,80 +54,20 @@
 <body>
   <header><h1>Snacks & Bebidas</h1></header>
 
-<!-- Menú -->
-<section class="menu">
-  <div class="card">
-    <img src="https://i.imgur.com/Fs0pPpA.png" alt="Coca Cola">
-    <h3>Coca Cola lata 354ml</h3>
-    <p class="price">$2000</p>
-  </div>
-  <div class="card">
-    <img src="https://i.imgur.com/beZNyBO.png" alt="Agua Mineral Natural">
-    <h3>Agua Mineral Natural 500 ml</h3>
-    <p class="price">$1800</p>
-  </div>
-  <div class="card">
-    <img src="https://i.imgur.com/6kr0Lwl.png" alt="Pepsi Black">
-    <h3>Pepsi Black 354ml</h3>
-    <p class="price">$2000</p>
-  </div>
-  <div class="card">
-    <img src="https://i.imgur.com/XciApPU.png" alt="Galletas Club Social">
-    <h3>Galletas Club Social 144g</h3>
-    <p class="price">$1000</p>
-  </div>
-  <div class="card">
-  <img src="https://i.imgur.com/tGy7FLa.png" alt="Ramen Korean">
-  <h3>Ramen Korean</h3>
-  <p class="price">$5000</p>
-</div>
+  <!-- Menú dinámico -->
+  <section class="menu" id="menu-productos">
+    <!-- Los productos se cargarán aquí desde productos.csv -->
+  </section>
 
-  <!-- PRODUCTOS PAUSADOS (para reactivar cuando los compres de nuevo) -->
-  <!--
-  <div class="card">
-    <img src="https://i.imgur.com/ceNElj6.png" alt="Cerveza Stella">
-    <h3>Cerveza Stella 330ml</h3>
-    <p class="price">$3000</p>
+  <!-- ✅ Botón sutil para ir al presupuestador -->
+  <div style="text-align: center; margin: 1rem 0;">
+    <a href="presupuesto.html" style="color: #e67e22; text-decoration: none; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 6px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+      </svg>
+      Armar mi pedido
+    </a>
   </div>
-  <div class="card">
-    <img src="https://i.imgur.com/u5d5Fq6.png" alt="Agua Tónica">
-    <h3>Agua Tónica 269ml</h3>
-    <p class="price">$1400</p>
-  </div>
-  <div class="card">
-    <img src="https://i.imgur.com/FyRmO4u.png" alt="Papas fritas Check">
-    <h3>Papas fritas Check 150g</h3>
-    <p class="price">$4800</p>
-  </div>
-  -->
-
-  <!-- NUEVOS PRODUCTOS -->
-  <div class="card">
-    <img src="https://i.imgur.com/ioiVM8Z.png" alt="Guarraziani 2L">
-    <h3>Guarraziani de 2 litros</h3>
-    <p class="price">$3500</p>
-  </div>
-  <div class="card">
-    <img src="https://i.imgur.com/bbHdPyv.png" alt="Bebida coreana">
-    <h3>Bebida importada coreana</h3>
-    <p class="price">$3500</p>
-  </div>
-  <div class="card">
-    <img src="https://i.imgur.com/u1WA8mp.png" alt="Papas fritas">
-    <h3>Papas fritas</h3>
-    <p class="price">$2500</p>
-  </div>
-</section>
-
-<!-- ✅ Botón sutil para ir al presupuestador -->
-<div style="text-align: center; margin: 1rem 0;">
-  <a href="presupuesto.html" style="color: #e67e22; text-decoration: none; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 6px;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-      <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-    </svg>
-    Armar mi pedido
-  </a>
-</div>
 
   <!-- FAQ -->
   <section class="faq">
@@ -163,12 +103,10 @@
       <button onclick="cambiarFoto(-1)">⬅ Anterior</button>
       <button onclick="cambiarFoto(1)">Siguiente ➡</button>
 
-      <!-- Botón Instagram con ícono -->
       <a id="btn-instagram" href="#" target="_blank" title="Ver Reel en Instagram">
         <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" style="width: 35px; border-radius: 50%;">
       </a>
 
-      <!-- Botón Google Maps -->
       <a id="btn-google-maps" href="#" target="_blank" title="Ver en Google Maps">
         <img src="https://img.icons8.com/color/48/000000/google-maps.png" alt="Google Maps" style="width: 35px; border-radius: 50%;">
       </a>
@@ -180,7 +118,6 @@
     const imagenes = document.querySelectorAll('.carousel-container img');
     const titulo = document.getElementById('foto-titulo');
 
-    // Instagram Reels
     const enlacesInfo = [
       'https://www.instagram.com/reel/C32pHyUuuYR/?igsh=MTk4bng4MzR2dG9kaw==',
       'https://www.instagram.com/reel/Cum4wC4ATuY/?igsh=MWE0b21icjZucjh2ZA==',
@@ -192,24 +129,21 @@
     ];
 
     function actualizarTitulo() {
-  const lugar = imagenes[currentIndex].alt;
-  titulo.textContent = lugar;
+      const lugar = imagenes[currentIndex].alt;
+      titulo.textContent = lugar;
+      document.getElementById('btn-instagram').href = enlacesInfo[currentIndex];
 
-  document.getElementById('btn-instagram').href = enlacesInfo[currentIndex];
-
-  let linkMaps = "https://www.google.com/maps/search/" + encodeURIComponent(lugar + " Córdoba");
-
-  const lugarLower = lugar.toLowerCase();
-  if(lugarLower.includes("puente 450")) {
-    linkMaps = "https://www.google.com.ar/maps/place/Puente+450%C2%BA+Aniversario+(Puente+Peatonal+Parque+Las+Heras+-+Elisa)/@-31.4065471,-64.1869528,17z/data=!3m1!4b1!4m6!3m5!1s0x9432992488c8806b:0xd716e7f4617a15b3!8m2!3d-31.4065471!4d-64.1843779!16s%2Fg%2F11vc3952gq?entry=ttu";
-  } else if(lugarLower.includes("mirador") && lugarLower.includes("sarmiento")) {
-    linkMaps = "https://www.google.com/maps/place/Mirador+del+Parque+Sarmiento/@-31.4259395,-64.1778692,17z/data=!3m1!4b1!4m6!3m5!1s0x9432a2915aad2ca5:0x2609e2343fc6d9a0!8m2!3d-31.4259395!4d-64.1778692!16s%2Fg%2F11c3wv560j?entry=ttu&g_ep=EgoyMDI1MDkwMy4wIKXMDSoASAFQAw%3D%3D";
-  } else if(lugarLower.includes("guemes")) {
-    linkMaps = "https://www.google.com/maps/place/Belgrano+900,+X5000JQR+C%C3%B3rdoba/@-31.425248,-64.1953664,17z";
-  }
-
-  document.getElementById('btn-google-maps').href = linkMaps;
-}
+      let linkMaps = "https://www.google.com/maps/search/" + encodeURIComponent(lugar + " Córdoba");
+      const lugarLower = lugar.toLowerCase();
+      if(lugarLower.includes("puente 450")) {
+        linkMaps = "https://www.google.com.ar/maps/place/Puente+450%C2%BA+Aniversario+(Puente+Peatonal+Parque+Las+Heras+-+Elisa)/@-31.4065471,-64.1869528,17z/data=!3m1!4b1!4m6!3m5!1s0x9432992488c8806b:0xd716e7f4617a15b3!8m2!3d-31.4065471!4d-64.1843779!16s%2Fg%2F11vc3952gq?entry=ttu";
+      } else if(lugarLower.includes("mirador") && lugarLower.includes("sarmiento")) {
+        linkMaps = "https://www.google.com/maps/place/Mirador+del+Parque+Sarmiento/@-31.4259395,-64.1778692,17z/data=!3m1!4b1!4m6!3m5!1s0x9432a2915aad2ca5:0x2609e2343fc6d9a0!8m2!3d-31.4259395!4d-64.1778692!16s%2Fg%2F11c3wv560j?entry=ttu&g_ep=EgoyMDI1MDkwMy4wIKXMDSoASAFQAw%3D%3D";
+      } else if(lugarLower.includes("guemes")) {
+        linkMaps = "https://www.google.com/maps/place/Belgrano+900,X5000JQR+C%C3%B3rdoba/@-31.425248,-64.1953664,17z";
+      }
+      document.getElementById('btn-google-maps').href = linkMaps;
+    }
 
     function cambiarFoto(direccion) {
       imagenes[currentIndex].classList.remove('active');
@@ -221,10 +155,8 @@
     setInterval(() => {
       cambiarFoto(1);
     }, 5000);
-
     actualizarTitulo();
 
-    // Consejos
     function mostrarConsejo(tipo) {
       const mensajes = {
         centro: "Visitá la Catedral, la Plaza San Martín y la Manzana Jesuítica.",
@@ -233,16 +165,65 @@
       };
       document.getElementById("consejo").innerText = mensajes[tipo] || "";
     }
+
+    // === CARGA DINÁMICA DE PRODUCTOS ===
+    async function cargarProductos() {
+      try {
+        const response = await fetch('data/productos.csv');
+        const text = await response.text();
+        const lines = text.split('\n').filter(line => line.trim() !== '');
+        const headers = lines[0].split(',').map(h => h.trim());
+        const productos = [];
+        for (let i = 1; i < lines.length; i++) {
+          const values = lines[i].split(',').map(v => v.trim().replace(/^"(.*)"$/, '$1'));
+          const prod = {};
+          headers.forEach((header, idx) => {
+            if (header === 'precio') {
+              prod[header] = parseInt(values[idx]) || 0;
+            } else {
+              prod[header] = values[idx] || '';
+            }
+          });
+          productos.push(prod);
+        }
+        return productos;
+      } catch (err) {
+        console.error('⚠️ Error al cargar productos.csv:', err);
+        return [];
+      }
+    }
+
+    function renderizarMenu(productos) {
+      const contenedor = document.getElementById('menu-productos');
+      contenedor.innerHTML = '';
+      productos.forEach(prod => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <img src="${prod.img}" alt="${prod.nombre}">
+          <h3>${prod.nombre}</h3>
+          <p class="price">$${prod.precio.toLocaleString()}</p>
+        `;
+        contenedor.appendChild(card);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const productos = await cargarProductos();
+      renderizarMenu(productos);
+    });
   </script>
 
-<footer>
-  <p>Dirección: Humberto Primo 118, Barrio Centro, Córdoba</p>
-  <div class="social-icons">
-    <a href="https://wa.me/5493513814202?text=%F0%9F%91%8B%20Hola%20😊%20Quer%C3%ADa%20hacerte%20una%20consulta%20sobre%20tus%20productos%20%F0%9F%92%A1" target="_blank">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-    </a>
-    <a href="https://www.google.com/maps/place/Humberto+1%C2%BA+118,+X5000FAD+C%C3%B3rdoba/@-31.4096239,-64.1879432,17z/data=!3m1!4b1!4m6!3m5!1s0x9432987781bb1cf3:0xb5f0023ae1601f0!8m2!3d-31.409624!4d-64.1830723!16s%2Fg%2F11rhs52bkc?entry=ttu&g_ep=EgoyMDI1MDkwMy4wIKXMDSoASAFQAw%3D%3D" target="_blank">
-      <img src="https://img.icons8.com/color/48/000000/google-maps.png" alt="Google Maps" style="width: 35px;">
-    </a>
-  </div>
-</footer>
+  <footer>
+    <p>Dirección: Humberto Primo 118, Barrio Centro, Córdoba</p>
+    <div class="social-icons">
+      <a href="https://wa.me/5493513814202?text=👋%20Hola%20😊%20Quer%C3%ADa%20hacerte%20una%20consulta%20sobre%20tus%20productos%20💎" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+      </a>
+      <a href="https://www.google.com/maps/place/Humberto+1%C2%BA+118,X5000FAD+C%C3%B3rdoba/@-31.4096239,-64.1879432,17z/data=!3m1!4b1!4m6!3m5!1s0x9432987781bb1cf3:0xb5f0023ae1601f0!8m2!3d-31.409624!4d-64.1830723!16s%2Fg%2F11rhs52bkc?entry=ttu&g_ep=EgoyMDI1MDkwMy4wIKXMDSoASAFQAw%3D%3D" target="_blank">
+        <img src="https://img.icons8.com/color/48/000000/google-maps.png" alt="Google Maps" style="width: 35px;">
+      </a>
+    </div>
+  </footer>
+</body>
+</html>

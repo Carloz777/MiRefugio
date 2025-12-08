@@ -165,20 +165,37 @@
   </section>
 
   <script>
-   const productos = [
-  { nombre: "Coca Cola lata 354ml", precio: 2000, img: "https://i.imgur.com/Fs0pPpA.png" },
-  { nombre: "Agua Mineral Natural 500 ml", precio: 1800, img: "https://i.imgur.com/beZNyBO.png" },
-  { nombre: "Pepsi Black 354ml", precio: 2000, img: "https://i.imgur.com/6kr0Lwl.png" },
-  { nombre: "Galletas Club Social 144g", precio: 1000, img: "https://i.imgur.com/XciApPU.png" },
-  { nombre: "Guarraziani de 2 litros", precio: 3500, img: "https://i.imgur.com/ioiVM8Z.png" },
-  { nombre: "Bebida importada coreana", precio: 3500, img: "https://i.imgur.com/bbHdPyv.png" },
-  { nombre: "Papas fritas", precio: 2500, img: "https://i.imgur.com/u1WA8mp.png" },
-  { nombre: "Ramen Korean", precio: 5000, img: "https://i.imgur.com/tGy7FLa.png" }
-];
+    // === CARGA DINÁMICA DE PRODUCTOS ===
+    async function cargarProductos() {
+      try {
+        const response = await fetch('data/productos.csv');
+        const text = await response.text();
+        const lines = text.split('\n').filter(line => line.trim() !== '');
+        const headers = lines[0].split(',').map(h => h.trim());
+        const productos = [];
+        for (let i = 1; i < lines.length; i++) {
+          const values = lines[i].split(',').map(v => v.trim().replace(/^"(.*)"$/, '$1'));
+          const prod = {};
+          headers.forEach((header, idx) => {
+            if (header === 'precio') {
+              prod[header] = parseInt(values[idx]) || 0;
+            } else {
+              prod[header] = values[idx] || '';
+            }
+          });
+          productos.push(prod);
+        }
+        return productos;
+      } catch (err) {
+        console.error('⚠️ Error al cargar productos.csv:', err);
+        return [];
+      }
+    }
 
+    let productos = [];
     let carrito = {};
 
-    function cargarProductos() {
+    function renderizarPresupuesto() {
       const contenedor = document.getElementById('lista-productos');
       contenedor.innerHTML = '';
 
@@ -219,7 +236,7 @@
     function reiniciarPresupuesto() {
       if (confirm("¿Seguro que querés reiniciar el presupuesto?")) {
         carrito = {};
-        cargarProductos();
+        renderizarPresupuesto();
         actualizarTotal();
       }
     }
@@ -245,11 +262,11 @@
         "Papas fritas": "🍟",
         "Agua Mineral": "💧",
         "Galletas": "🍪",
-        "Club Social": "🍪"
+        "Club Social": "🍪",
+        "Ramen": "🍜"
       };
 
       let hayProductos = false;
-
       Object.keys(carrito).forEach(key => {
         const index = parseInt(key.split('-')[1]);
         const cantidad = carrito[key];
@@ -282,12 +299,12 @@
 
       const telefono = "5493513814202";
       const url = `https://api.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
-      
       window.open(url, '_blank', 'width=600,height=600');
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      cargarProductos();
+    document.addEventListener('DOMContentLoaded', async () => {
+      productos = await cargarProductos();
+      renderizarPresupuesto();
       actualizarTotal();
     });
   </script>
