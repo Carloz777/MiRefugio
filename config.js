@@ -1,0 +1,5 @@
+
+const CONFIG = {
+  CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIPWx2NrsBzHVVegawYOzdgT8bAmRpFvPBIGGMw3rK9Cn_6fXlaiwYoUxieq5E3mYtEotCU53zQatn/pub?gid=0&single=true&output=csv"
+};
+  
