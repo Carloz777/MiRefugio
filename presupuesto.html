@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Calculadora de Presupuesto - Snacks & Bebidas</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-  <style>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <style>     
     body {
       font-family: 'Montserrat', sans-serif;
       background: #fafafa;
@@ -159,154 +159,329 @@
       <div class="action-buttons">
         <button class="btn btn-copiar" onclick="copiarTotal()">📋 Copiar Total</button>
         <button class="btn btn-reiniciar" onclick="reiniciarPresupuesto()">🗑️ Reiniciar</button>
-        <button class="btn btn-whatsapp" onclick="enviarPorWhatsApp()">📲 Enviar por WhatsApp</button>
+        <button
+                id="btn-confirmar"
+                class="btn btn-whatsapp"
+                onclick="enviarPorWhatsApp()">
+                🛒 Confirmar pedido por WhatsApp
+        </button>
+              <p id="mensaje-stock"
+        style="display:none; color:#c0392b; margin-top:12px; text-align:center;">
+        😔📦 ¡Ups! Nos quedamos sin stock.<br>
+        🙏 Disculpá las molestias.<br>
+        💙 ¡Gracias por elegir MiRefugio! 🌿✨
+      </p>
       </div>
     </div>
   </section>
 
-  <script>
-    // === CARGA DINÁMICA DE PRODUCTOS ===
-    async function cargarProductos() {
-      try {
-        const response = await fetch('data/productos.csv');
-        const text = await response.text();
-        const lines = text.split('\n').filter(line => line.trim() !== '');
-        const headers = lines[0].split(',').map(h => h.trim());
-        const productos = [];
-        for (let i = 1; i < lines.length; i++) {
-          const values = lines[i].split(',').map(v => v.trim().replace(/^"(.*)"$/, '$1'));
-          const prod = {};
-          headers.forEach((header, idx) => {
-            if (header === 'precio') {
-              prod[header] = parseInt(values[idx]) || 0;
-            } else {
-              prod[header] = values[idx] || '';
-            }
-          });
-          productos.push(prod);
-        }
-        return productos;
-      } catch (err) {
-        console.error('⚠️ Error al cargar productos.csv:', err);
-        return [];
+  <script src="config.js"></script>
+<script>
+const CSV_URL = CONFIG.CSV_URL;
+function leerCSV(texto) {
+  const filas = [];
+  let fila = [], campo = "", comillas = false;
+
+  for (let i = 0; i < texto.length; i++) {
+    const c = texto[i];
+
+    if (c === '"') {
+      if (comillas && texto[i + 1] === '"') {
+        campo += '"';
+        i++;
+      } else {
+        comillas = !comillas;
       }
+    } else if (c === ',' && !comillas) {
+      fila.push(campo);
+      campo = "";
+    } else if ((c === '\n' || c === '\r') && !comillas) {
+      if (c === '\r' && texto[i + 1] === '\n') i++;
+      fila.push(campo);
+      filas.push(fila);
+      fila = [];
+      campo = "";
+    } else {
+      campo += c;
+    }
+  }
+
+  if (campo || fila.length) {
+    fila.push(campo);
+    filas.push(fila);
+  }
+
+  return filas;
+}
+
+async function cargarProductos() {
+  const contenedor = document.getElementById("lista-productos");
+  contenedor.textContent = "Cargando productos...";
+
+  try {
+    const respuesta = await fetch(CSV_URL, { cache: "no-store" });
+    if (!respuesta.ok) throw new Error("No se pudo leer Google Sheets");
+
+    const filas = leerCSV(await respuesta.text());
+    const encabezados = filas.shift().map(x => x.trim().toLowerCase());
+
+    const col = nombre => encabezados.indexOf(nombre);
+
+    if (["nombre", "precio", "img", "stock"].some(x => col(x) < 0)) {
+      throw new Error("Faltan columnas en Google Sheets");
     }
 
-    let productos = [];
-    let carrito = {};
+    productos = filas
+      .filter(f => f[col("nombre")]?.trim())
+      .map(f => ({
+        nombre: f[col("nombre")].trim(),
+        precio: Number(f[col("precio")]),
+        img: f[col("img")].trim(),
+        stock: Number(f[col("stock")])
+      }));
 
-    function renderizarPresupuesto() {
-      const contenedor = document.getElementById('lista-productos');
-      contenedor.innerHTML = '';
-
-      productos.forEach((prod, index) => {
-        const div = document.createElement('div');
-        div.className = 'prod-card';
-        div.innerHTML = `
-          <img src="${prod.img}" alt="${prod.nombre}">
-          <strong>${prod.nombre}</strong>
-          <div class="precio">$${prod.precio.toLocaleString()}</div>
-          <div class="qty-controls">
-            <button class="qty-btn" onclick="cambiarCantidad(${index}, -1)">−</button>
-            <span id="cantidad-${index}" class="qty-display">0</span>
-            <button class="qty-btn plus" onclick="cambiarCantidad(${index}, 1)">+</button>
-          </div>
-        `;
-        contenedor.appendChild(div);
-      });
+    if (productos.some(p =>
+      !Number.isFinite(p.precio) || p.precio < 0 ||
+      !Number.isInteger(p.stock) || p.stock < 0
+    )) {
+      throw new Error("Hay precios o cantidades de stock inválidos");
     }
 
-    function cambiarCantidad(index, delta) {
-      const key = `prod-${index}`;
-      carrito[key] = (carrito[key] || 0) + delta;
-      if (carrito[key] < 0) carrito[key] = 0;
-      document.getElementById(`cantidad-${index}`).textContent = carrito[key];
-      actualizarTotal();
-    }
+    carrito = {};
+    dibujarProductos();
+    actualizarTotal();
 
-    function actualizarTotal() {
-      let total = 0;
-      Object.keys(carrito).forEach(key => {
-        const index = parseInt(key.split('-')[1]);
-        total += (carrito[key] * productos[index].precio);
-      });
-      document.getElementById('total-presupuesto').textContent = `$${total.toLocaleString()}`;
-    }
+  } catch (error) {
+    contenedor.textContent = "Error al cargar productos: " + error.message;
+    console.error(error);
+  }
+}
 
-    function reiniciarPresupuesto() {
-      if (confirm("¿Seguro que querés reiniciar el presupuesto?")) {
-        carrito = {};
-        renderizarPresupuesto();
-        actualizarTotal();
-      }
-    }
+function dibujarProductos() {
+  const contenedor = document.getElementById("lista-productos");
+  contenedor.innerHTML = "";
 
-    function copiarTotal() {
-      const total = document.getElementById('total-presupuesto').textContent;
-      navigator.clipboard.writeText(total).then(() => {
-        alert('✅ Total copiado: ' + total);
-      }).catch(() => {
-        alert('⚠️ No se pudo copiar. Intenta seleccionar y copiar manualmente.');
-      });
-    }
+  productos.forEach((prod, index) => {
+    const div = document.createElement("div");
+    div.className = "prod-card";
 
-    function enviarPorWhatsApp() {
-      let mensaje = "Hola! Este es el detalle de tu consumo del frigobar ☺️:\n\n";
-      let total = 0;
+    const img = document.createElement("img");
 
-      const emojis = {
-        "Coca Cola": "🥤",
-        "Pepsi": "🥤",
-        "Guarraziani": "🧃",
-        "Bebida coreana": "🇰🇷",
-        "Papas fritas": "🍟",
-        "Agua Mineral": "💧",
-        "Galletas": "🍪",
-        "Club Social": "🍪",
-        "Ramen": "🍜"
-      };
+const imagenesLocales = {
+  "Coca Cola lata 354ml": "coca-cola.png",
+  "Agua Mineral Natural 500 ml": "Agua- 500ml.png",
+  "Pepsi Black 354ml": "pepsi - Black.png",
+  "Bizcocho 9 de oro": "9 de oro.png",
+  "Ramen Korean": "Ramean.png",
+  "Guarraziani de 2 litros": "Agua 2 litros.png",
+  "Papas fritas": "papas quento.png",
+  "Cerveza Imperial GOLDEN": "cerveza Golden.png",
+  "Gaseosa Pepsi 2 litros": "pepsi 2 Litrod.png",
+  "Cerveza Stella Artois-473cc": "Cerveza Stella.png",
+  "Agua Tónica 269ml": "paso de los toros.png",
+  // Agregamos las nuevas por si las dudas:
+  "Galletitas Rex 125 g": "Galletas Rex 125.png",
+  "Lay's clásicas 40 g": "Lays 40 gr.png",
+  "Cerveza Quilmes 340 ml": "Quilmes 340 cc.png"
+};
 
-      let hayProductos = false;
-      Object.keys(carrito).forEach(key => {
-        const index = parseInt(key.split('-')[1]);
-        const cantidad = carrito[key];
-        if (cantidad > 0) {
-          hayProductos = true;
-          const prod = productos[index];
-          const subtotal = cantidad * prod.precio;
+const archivoImagen = imagenesLocales[prod.nombre.trim()];
 
-          let emoji = "✨";
-          for (let clave in emojis) {
-            if (prod.nombre.toLowerCase().includes(clave.toLowerCase())) {
-              emoji = emojis[clave];
-              break;
-            }
-          }
+img.src = archivoImagen
+  ? "imagenes/" + archivoImagen
+  : prod.img;
 
-          mensaje += `${emoji} ${cantidad}x ${prod.nombre} → $${subtotal.toLocaleString()}\n`;
-          total += subtotal;
-        }
-      });
+    img.onerror = () => {
+  console.error("No se pudo cargar la imagen:", img.src);
+};
+    img.alt = prod.nombre;
 
-      if (!hayProductos) {
-        alert("No seleccionaste ningún producto.");
-        return;
-      }
+    const nombre = document.createElement("strong");
+    nombre.textContent = prod.nombre;
 
-      mensaje += `\n💰 Total: $${total.toLocaleString()}\n\n`;
-      mensaje += "💙 Gracias por disfrutar de tu estadía con nosotros.\n";
-      mensaje += "¡Esperamos que hayas disfrutado cada momento! 🌿✨";
+    const precio = document.createElement("div");
+    precio.className = "precio";
+    precio.textContent = "$" + prod.precio.toLocaleString("es-AR");
 
-      const telefono = "5493513814202";
-      const url = `https://api.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
-      window.open(url, '_blank', 'width=600,height=600');
-    }
+    const stock = document.createElement("small");
+    stock.textContent = prod.stock > 0
+      ? "Disponible: " + prod.stock
+      : "Sin stock";
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      productos = await cargarProductos();
-      renderizarPresupuesto();
-      actualizarTotal();
+    const controles = document.createElement("div");
+    controles.className = "qty-controls";
+
+    const menos = document.createElement("button");
+    menos.className = "qty-btn";
+    menos.textContent = "−";
+    menos.onclick = () => cambiarCantidad(index, -1);
+
+    const cantidad = document.createElement("span");
+    cantidad.id = "cantidad-" + index;
+    cantidad.className = "qty-display";
+    cantidad.textContent = "0";
+
+    const mas = document.createElement("button");
+    mas.className = "qty-btn plus";
+    mas.textContent = "+";
+    mas.disabled = prod.stock === 0;
+    mas.onclick = () => cambiarCantidad(index, 1);
+
+    controles.append(menos, cantidad, mas);
+    div.append(img, nombre, precio, stock, controles);
+    contenedor.appendChild(div);
+  });
+}
+
+function cambiarCantidad(index, delta) {
+   if (pedidoEnProceso) return;
+  const actual = carrito[index] || 0;
+  const nueva = actual + delta;
+
+  if (nueva < 0) return;
+
+  if (nueva > productos[index].stock) {
+    alert("No hay suficiente stock de " + productos[index].nombre);
+    return;
+  }
+
+carrito[index] = nueva;
+
+// Si cambia el carrito, el próximo pedido tendrá un ID nuevo.
+window.pedidoIdPendiente = null;
+
+document.getElementById("cantidad-" + index).textContent = nueva;
+actualizarTotal();
+}
+
+function actualizarTotal() {
+  const total = productos.reduce((suma, p, i) =>
+    suma + p.precio * (carrito[i] || 0), 0);
+
+  document.getElementById("total-presupuesto").textContent =
+    "$" + total.toLocaleString("es-AR");
+}
+
+function reiniciarPresupuesto() {
+  if (pedidoEnProceso) {
+    alert("⏳ Estamos confirmando tu pedido. Esperá un momento.");
+    return;
+  }
+
+  if (confirm("¿Seguro que querés reiniciar el presupuesto?")) {
+    carrito = {};
+    window.pedidoIdPendiente = null;
+    dibujarProductos();
+    actualizarTotal();
+  }
+}
+
+async function copiarTotal() {
+  try {
+    const total = document.getElementById("total-presupuesto").textContent;
+    await navigator.clipboard.writeText(total);
+    alert("✅ Total copiado: " + total);
+  } catch {
+    alert("No se pudo copiar el total.");
+  }
+}
+
+let pedidoEnProceso = false;
+
+async function enviarPorWhatsApp() {
+  if (pedidoEnProceso) return;
+
+  const seleccionados = productos
+    .map((p, i) => ({ ...p, cantidad: carrito[i] || 0 }))
+    .filter(p => p.cantidad > 0);
+
+const confirmar = confirm(
+  "🛒 ¿Confirmás que consumiste estos productos?\n\n" +
+  "Al aceptar, el consumo quedará registrado y " +
+  "se descontará del stock.\n\n" +
+  "Después se abrirá WhatsApp con el detalle."
+);
+
+if (!confirmar) return;
+
+  const total = seleccionados.reduce(
+    (suma, p) => suma + p.precio * p.cantidad, 0
+  );
+
+  let mensaje = "Hola! Este es el detalle de tu consumo del frigobar ☺️:\n\n";
+
+  seleccionados.forEach(p => {
+    mensaje += `🛒 ${p.cantidad}x ${p.nombre} → $${(p.precio * p.cantidad).toLocaleString("es-AR")}\n`;
+  });
+
+  mensaje += `\n💰 Total: $${total.toLocaleString("es-AR")}\n\n`;
+  mensaje += "💙 Gracias por disfrutar de tu estadía con nosotros.\n";
+  mensaje += "¡Esperamos que hayas disfrutado cada momento! 🌿✨";
+
+  const telefono = "5493513814202";
+  const url = `https://api.whatsapp.com/send?phone=${telefono}&text=${encodeURIComponent(mensaje)}`;
+
+  // Abrimos la pestaña desde el clic para evitar bloqueos del navegador.
+  const ventanaWhatsApp = window.open("", "_blank");
+
+  pedidoEnProceso = true;
+
+ if (!window.pedidoIdPendiente) {
+  window.pedidoIdPendiente = crypto.randomUUID();
+}
+const pedidoId = window.pedidoIdPendiente;
+
+  try {
+    const respuesta = await fetch("/.netlify/functions/confirmar-pedido", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        pedidoId,
+        items: seleccionados.map(p => ({
+          nombre: p.nombre,
+          cantidad: p.cantidad
+        }))
+      })
     });
-  </script>
+
+    const resultado = await respuesta.json();
+
+    if (!respuesta.ok || !resultado.success) {
+      throw new Error(resultado.error || "No se pudo confirmar el pedido.");
+    }
+
+if (ventanaWhatsApp) {
+  ventanaWhatsApp.location.href = url;
+} else {
+  window.location.href = url;
+}
+
+// El pedido fue confirmado: liberar su identificador.
+window.pedidoIdPendiente = null;
+
+// Vaciar el carrito y actualizar la pantalla.
+carrito = {};
+dibujarProductos();
+actualizarTotal();
+
+  } catch (error) {
+    if (ventanaWhatsApp) ventanaWhatsApp.close();
+
+    alert(
+      "😔📦 ¡Ups! No pudimos confirmar tu pedido.\n\n" +
+      error.message +
+      "\n\n🙏 Disculpá las molestias.\n" +
+      "💙 ¡Gracias por elegir MiRefugio! 🌿✨"
+    );
+  } finally {
+    pedidoEnProceso = false;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", cargarProductos);
+</script>
+
 </body>
 </html>
